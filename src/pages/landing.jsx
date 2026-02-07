@@ -101,19 +101,19 @@ const Landing = () => {
 
             <div className={styles.teamList}>
               <div className={styles.teamMember}>
-                <strong>Kanishk Kapoor</strong> <span className={styles.role}>(CEO)</span>
+                <strong>Joydeep Nalawade</strong> <span className={styles.role}></span>
               </div>
               <div className={styles.teamMember}>
-                <strong>Naman Sharma</strong> <span className={styles.role}>(Project Manager)</span>
+                <strong>Kanishk Kapoor</strong> <span className={styles.role}></span>
               </div>
               <div className={styles.teamMember}>
-                <strong>Nandini Tiwari</strong> <span className={styles.role}>(Developer)</span>
+                <strong>Naman Sharma</strong> <span className={styles.role}></span>
               </div>
               <div className={styles.teamMember}>
-                <strong>Parangat Mudhbari</strong> <span className={styles.role}>(Tester)</span>
+                <strong>Nandini Tiwari</strong> <span className={styles.role}></span>
               </div>
               <div className={styles.teamMember}>
-                <strong>Joydeep Nalawade</strong> <span className={styles.role}>(Intern)</span>
+                <strong>Parangat Mudhbari</strong> <span className={styles.role}></span>
               </div>
             </div>
           </div>
