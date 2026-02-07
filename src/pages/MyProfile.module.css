@@ -1,0 +1,125 @@
+
+/* --- Global Container --- */
+.container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f2f5; 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+  position: relative; /* Essential for absolute positioning of children */
+}
+.dark { background-color: #0f0f0f; color: #eee; }
+
+/* --- BACK BUTTON (FIXED) --- */
+.backBtn {
+  position: absolute;
+  top: 40px;  /* Increased spacing from top */
+  left: 40px; /* Increased spacing from left */
+  background: white; /* Optional: Add background to make it pop */
+  padding: 10px 20px;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border: none;
+  font-size: 1rem; 
+  font-weight: 700; 
+  color: #555; 
+  cursor: pointer;
+  z-index: 100; /* Ensure it stays ON TOP of everything */
+  transition: transform 0.2s;
+}
+.backBtn:hover { transform: translateX(-5px); }
+.dark .backBtn { background: #333; color: white; }
+
+/* --- Profile Card --- */
+.profileCard {
+  background: white;
+  padding: 40px;
+  border-radius: 25px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+  width: 90%;
+  max-width: 900px;
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  animation: floatUp 0.5s ease-out forwards;
+  position: relative;
+  z-index: 10;
+}
+.dark .profileCard { background: #1e1e1e; }
+
+@keyframes floatUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Left Column --- */
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+  padding-top: 20px;
+}
+.mascot {
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  border: 4px solid #8A2BE2;
+  padding: 5px;
+  margin-bottom: 15px;
+}
+.title { font-size: 2rem; font-weight: 800; color: #333; margin: 0; }
+.dark .title { color: white; }
+
+/* --- Right Column --- */
+.rightColumn {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+}
+.formGroup { display: flex; flex-direction: column; }
+.fullWidth { grid-column: span 2; }
+.label {
+  font-size: 0.8rem; font-weight: 700; color: #666;
+  margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.dark .label { color: #aaa; }
+
+/* --- INPUTS --- */
+.input {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 2px solid #ccc; 
+  background-color: #f9f9f9; 
+  color: #333;
+  font-size: 1rem;
+  font-family: inherit;
+  box-sizing: border-box; 
+}
+.dark .input { background-color: #2c2c2c; border-color: #444; color: white; }
+
+.input:focus {
+  border-color: #8A2BE2;
+  background-color: white;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.1);
+}
+
+.ageText {
+  font-size: 0.85rem; color: #0072B1; font-weight: 600; margin-top: 5px;
+}
+
+.saveBtn {
+  grid-column: span 2; margin-top: 10px; padding: 14px;
+  border: none; border-radius: 10px;
+  background: #8A2BE2; color: white;
+  font-size: 1.1rem; font-weight: 700; cursor: pointer;
+  transition: background 0.2s;
+}
+.saveBtn:hover { background: #7b1fa2; }
