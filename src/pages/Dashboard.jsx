@@ -1,15 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom"; 
 import styles from "./Dashboard.module.css";
+import { useTheme } from "../context/ThemeContext"; 
 
-// --- OPTIMIZED MATRIX EFFECT ---
+// --- MATRIX COMPONENT ---
 const GlitchBackground = ({ isDarkMode }) => {
   const canvasRef = useRef(null);
-  const modeRef = useRef(isDarkMode);
-
-  useEffect(() => {
-    modeRef.current = isDarkMode;
-  }, [isDarkMode]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -43,47 +39,39 @@ const GlitchBackground = ({ isDarkMode }) => {
 
       if (deltaTime > frameInterval) {
         lastTime = currentTime - (deltaTime % frameInterval);
-        const currentMode = modeRef.current;
-
-        ctx.fillStyle = currentMode ? "rgba(15, 15, 15, 0.25)" : "rgba(248, 249, 250, 0.25)";
+        ctx.fillStyle = isDarkMode ? "rgba(5, 5, 5, 0.25)" : "rgba(240, 240, 240, 0.25)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-
         ctx.font = `bold ${fontSize}px monospace`; 
 
         for (let i = 0; i < drops.length; i++) {
           const text = charArray[Math.floor(Math.random() * charArray.length)];
           const alpha = Math.random(); 
           if(alpha > 0.98) {
-            ctx.fillStyle = "#E056FD"; 
+            ctx.fillStyle = "#fff"; 
           } else {
-            ctx.fillStyle = currentMode ? "#9B59B6" : "#8A2BE2"; 
+            ctx.fillStyle = isDarkMode ? "#E056FD" : "#1F2937"; 
           }
-
           ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-          if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) {
-            drops[i] = 0;
-          }
+          if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) drops[i] = 0;
           drops[i]++;
         }
       }
     };
-
     animationFrameId = requestAnimationFrame(draw);
-
     return () => { 
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', setSize);
     };
-  }, []);
+  }, [isDarkMode]);
 
   return <canvas ref={canvasRef} className={styles.glitchCanvas} />;
 };
 
 const Dashboard = () => {
-  const [isDarkMode, setIsDarkMode] = useState(true); 
+  const { isDarkMode, toggleTheme } = useTheme(); 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currency, setCurrency] = useState(0);
+  const [streak, setStreak] = useState(0);
 
   const location = useLocation();
   const navigate = useNavigate(); 
@@ -100,21 +88,19 @@ const Dashboard = () => {
 
   useEffect(() => {
     const savedCurrency = localStorage.getItem("userCurrency");
-    if (savedCurrency) {
-      setCurrency(parseInt(savedCurrency));
-    }
+    if (savedCurrency) setCurrency(parseInt(savedCurrency));
+    const savedStreak = localStorage.getItem("userStreak");
+    setStreak(savedStreak ? parseInt(savedStreak) : 5);
   }, []);
 
-  const toggleTheme = () => setIsDarkMode(!isDarkMode);
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
-  // --- UPDATED CLICK HANDLER ---
   const handleGameClick = (gameTitle) => {
-    if (gameTitle === "Error Hunt") {
-      navigate("/error-hunt");
-    } else {
-      alert("Coming Soon");
-    }
+    if (gameTitle === "Error Hunt") navigate("/error-hunt");
+    else alert("Coming Soon");
+  };
+
+  // --- UPDATED: Navigate to Store Page ---
+  const handleStoreClick = () => {
+    navigate("/store");
   };
 
   const gridItems = [
@@ -128,25 +114,12 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className={`${styles.container} ${isDarkMode ? styles.dark : ""}`}>
+    <div className={`${styles.container} ${!isDarkMode ? styles.lightMode : ""}`}>
       
       <GlitchBackground isDarkMode={isDarkMode} />
 
-      <button className={styles.hamburgerBtn} onClick={toggleMenu}>
+      <button className={styles.hamburgerBtn} onClick={() => setIsMenuOpen(!isMenuOpen)}>
         ☰
-      </button>
-
-      {/* --- CURRENCY BUBBLE WITH TOOLTIP --- */}
-      <div className={styles.currencyBadge}>
-        <span className={styles.currencyTooltip}>
-          (use currency to buy items)
-        </span>
-        <span style={{ fontSize: "1.2rem", filter: "drop-shadow(0 0 5px gold)" }}>💰</span>
-        <span>{currency.toLocaleString()}</span>
-      </div>
-
-      <button className={styles.themeToggle} onClick={toggleTheme}>
-        {isDarkMode ? "☀️" : "🌙"}
       </button>
 
       {isMenuOpen && (
@@ -157,8 +130,35 @@ const Dashboard = () => {
           <div className={styles.menuItem} onClick={() => alert("Review Clicked")}>
             ⭐ Add Review
           </div>
+          <div className={styles.menuItem} onClick={() => { toggleTheme(); setIsMenuOpen(false); }}>
+            {isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+          </div>
         </div>
       )}
+
+      {/* --- TOP RIGHT GROUP (Stats + Store) --- */}
+      <div className={styles.topRightGroup}>
+        
+        {/* ROW 1: Badges */}
+        <div className={styles.statsRow}>
+          <div className={`${styles.badge} ${styles.currency}`}>
+            <span style={{ fontSize: "1.2rem", filter: "drop-shadow(0 0 5px gold)" }}>💰</span>
+            <span>{currency.toLocaleString()}</span>
+            <span className={styles.tooltip}>Current Balance</span>
+          </div>
+
+          <div className={`${styles.badge} ${styles.streak}`}>
+            <span style={{ fontSize: "1.2rem", filter: "drop-shadow(0 0 5px orange)" }}>🔥</span>
+            <span>{streak}</span>
+            <span className={styles.tooltip}>Daily Streak</span>
+          </div>
+        </div>
+
+        {/* ROW 2: Store Button (Icon Only - Squircle) */}
+        <button className={styles.storeBtn} onClick={handleStoreClick} title="Marketplace">
+          <span className={styles.cartIcon}>🛒</span>
+        </button>
+      </div>
 
       <header className={styles.header}>
         <div className={styles.greetingGroup}>

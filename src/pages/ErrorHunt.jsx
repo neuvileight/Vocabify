@@ -1,17 +1,28 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./ErrorHunt.module.css";
+import { useTheme } from "../context/ThemeContext";
 
 const ErrorHunt = () => {
   const navigate = useNavigate();
+  const { isDarkMode } = useTheme(); 
   
   // --- STATE ---
   const [topic, setTopic] = useState("");
   const [passageWords, setPassageWords] = useState([]);
   const [score, setScore] = useState(0);
   
-  const [maxLives, setMaxLives] = useState(3);
-  const [lives, setLives] = useState(3);
+  // --- UPDATED: Load Max Lives from Local Storage ---
+  const [maxLives, setMaxLives] = useState(() => {
+    const saved = localStorage.getItem("userMaxLives");
+    return saved ? parseInt(saved) : 3;
+  });
+  
+  // Initialize current lives based on maxLives
+  const [lives, setLives] = useState(() => {
+    const saved = localStorage.getItem("userMaxLives");
+    return saved ? parseInt(saved) : 3;
+  });
   
   const [gameActive, setGameActive] = useState(false);
   const [gameCompleted, setGameCompleted] = useState(false);
@@ -163,16 +174,19 @@ const ErrorHunt = () => {
 
   // --- LOGIC: Play Again ---
   const handlePlayAgain = () => {
+    // 1. Fetch latest lives from storage (in case they bought more)
+    const storedMax = parseInt(localStorage.getItem("userMaxLives") || "3");
+    
     setScore(0);
-    setMaxLives(3);
-    setLives(3);
+    setMaxLives(storedMax);
+    setLives(storedMax);
     setRestarts(0);
     setTotalMistakes(0);
     setCurrentStreak(0);
     setLongestStreak(0);
     setGameCompleted(false);
-    setGameActive(false); // Go back to start screen
-    setTopic(""); // Reset topic
+    setGameActive(false); 
+    setTopic(""); 
     setMessage("Enter a topic to start");
     setPassageWords([]);
   };
@@ -191,16 +205,21 @@ const ErrorHunt = () => {
     setFoundErrorsCount(0);
     setGameActive(true);
     
+    // Starting a NEW GAME (Level 1)
     if(overrideIndex === null) {
+      // Fetch latest Max Lives
+      const storedMax = parseInt(localStorage.getItem("userMaxLives") || "3");
+      
       setScore(0);
-      setMaxLives(3); 
-      setLives(3);    
+      setMaxLives(storedMax); 
+      setLives(storedMax);    
       setRestarts(0);
       setTotalMistakes(0);
       setCurrentStreak(0);
       setLongestStreak(0);
       setGameCompleted(false);
     } else if (overrideLives !== null) {
+      // Continuing or Restarting Level
       setLives(overrideLives);
     }
     
@@ -279,11 +298,12 @@ const ErrorHunt = () => {
   };
 
   const handleRestartRun = () => {
+    // Penalty logic: Restart with 1 less life than current capacity
     const nextMaxLives = maxLives - 1;
     setRestarts(prev => prev + 1); 
     
     if (nextMaxLives <= 0) {
-      alert("Game Over! No lives left.");
+      alert("Game Over! No lives left to restart.");
       window.location.reload(); 
     } else {
       setMaxLives(nextMaxLives);
@@ -304,7 +324,7 @@ const ErrorHunt = () => {
   const isLevelClear = foundErrorsCount === totalErrorsInPassage && totalErrorsInPassage > 0;
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${isDarkMode ? styles.dark : ""}`}>
       
       {/* SUCCESS MODAL (Levels 1-4) */}
       {showSuccessModal && (

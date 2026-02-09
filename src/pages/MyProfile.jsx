@@ -1,25 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./MyProfile.module.css";
+import { useTheme } from "../context/ThemeContext";
 
 const MyProfile = () => {
   const navigate = useNavigate();
-  
+  const { isDarkMode, toggleTheme } = useTheme();
+
+  // --- STATE ---
   const [formData, setFormData] = useState({
-    name: "",
-    dob: "",
-    gender: "Rather not say",
-    difficulty: "Rookie"
+    name: "Explorer",
+    email: "explorer@vocabify.com",
+    dob: "2010-01-01",
   });
 
-  const [age, setAge] = useState(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [stats, setStats] = useState({
+    currency: 0,
+    bestStreak: 0,
+  });
 
-  // --- Calculate Age ---
-  const calculateAge = (dateString) => {
-    if (!dateString) return null;
+  // --- LOAD DATA ---
+  useEffect(() => {
+    const storedUser = localStorage.getItem("userProfile");
+    if (storedUser) {
+      setFormData(JSON.parse(storedUser));
+    }
+
+    const currency = localStorage.getItem("userCurrency") || 0;
+    setStats({
+      currency: parseInt(currency),
+      bestStreak: 5, 
+    });
+  }, []);
+
+  // --- AGE CALCULATOR ---
+  const calculateAge = (dobString) => {
+    if (!dobString) return 0;
+    const birthDate = new Date(dobString);
     const today = new Date();
-    const birthDate = new Date(dateString);
     let age = today.getFullYear() - birthDate.getFullYear();
     const m = today.getMonth() - birthDate.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
@@ -28,103 +46,107 @@ const MyProfile = () => {
     return age;
   };
 
-  // --- Fetch Data ---
-  useEffect(() => {
-    const savedData = localStorage.getItem("userProfile");
-    if (savedData) {
-      try {
-        const parsed = JSON.parse(savedData);
-        setFormData({
-          name: parsed.name || "",
-          dob: parsed.dob || "",
-          gender: parsed.gender || "Rather not say",
-          difficulty: parsed.difficulty || "Rookie"
-        });
-        if (parsed.dob) setAge(calculateAge(parsed.dob));
-      } catch (error) {
-        console.error("Error loading profile:", error);
-      }
-    }
-  }, []);
-
+  // --- HANDLERS ---
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (name === "dob") setAge(calculateAge(value));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // --- ALWAYS SAVE CHANGES ---
   const handleSave = () => {
-    // 1. Save to Local Storage
     localStorage.setItem("userProfile", JSON.stringify(formData));
-    // 2. Navigate back
-    navigate("/dashboard", { state: { userName: formData.name } });
+    alert("Profile Updated Successfully!");
   };
 
   return (
     <div className={`${styles.container} ${isDarkMode ? styles.dark : ""}`}>
       
-      {/* Back Button */}
-      <button className={styles.backBtn} onClick={() => navigate("/dashboard")}>
-        ← Back
-      </button>
+      {/* NAVBAR */}
+      <nav className={styles.navBar}>
+        <button className={styles.backBtn} onClick={() => navigate("/dashboard")}>
+          ← Dashboard
+        </button>
+        <button className={styles.themeToggle} onClick={toggleTheme}>
+          {isDarkMode ? "☀️" : "🌙"}
+        </button>
+      </nav>
 
-      <div className={styles.profileCard}>
-        <div className={styles.leftColumn}>
-          <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascot" className={styles.mascot} />
-          <h1 className={styles.title}>My Profile</h1>
-        </div>
-
-        <div className={styles.rightColumn}>
-          {/* Name */}
-          <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-            <label className={styles.label}>Explorer Name</label>
-            <input 
-              type="text" 
-              name="name" 
-              value={formData.name} 
-              onChange={handleChange} 
-              className={styles.input} 
-              placeholder="Enter your name" 
-            />
-          </div>
-
-          {/* DOB */}
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Date of Birth</label>
-            <input 
-              type="date" 
-              name="dob" 
-              value={formData.dob} 
-              onChange={handleChange} 
-              className={styles.input} 
-            />
-            {age !== null && !isNaN(age) && <span className={styles.ageText}>Age: {age}</span>}
-          </div>
-
-          {/* Gender (Exact Match) */}
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Gender</label>
-            <select name="gender" value={formData.gender} onChange={handleChange} className={styles.input}>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Rather not say">Rather not say</option>
-            </select>
-          </div>
-
-          {/* Difficulty (Exact Match) */}
-          <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-            <label className={styles.label}>Difficulty Level</label>
-            <select name="difficulty" value={formData.difficulty} onChange={handleChange} className={styles.input}>
-              <option value="Rookie">Rookie</option>
-              <option value="I can watch English Movies (Intermediate)">I can watch English Movies (Intermediate)</option>
-              <option value="All The World's a Stage (Skilled)">All The World's a Stage (Skilled)</option>
-            </select>
-          </div>
-
-          <button className={styles.saveBtn} onClick={handleSave}>Save Changes</button>
+      {/* --- CSS STEALTH JET (TOP RIGHT) --- */}
+      <div className={styles.mascotContainer}>
+        <div className={styles.stealthJet}>
+          <div className={styles.cockpit}></div>
+          <div className={styles.wingRight}></div>
+          <div className={styles.tail}></div>
+          <div className={styles.fuselage}></div>
+          <div className={styles.wingLeft}></div>
+          <div className={styles.jetFlame}></div>
         </div>
       </div>
+
+      {/* CENTERED GLASS CARD */}
+      <div className={styles.mainCard}>
+        
+        {/* AVATAR */}
+        <div className={styles.avatarCircle}>
+          {formData.name.charAt(0).toUpperCase()}
+        </div>
+
+        {/* INPUTS */}
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>Username</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className={styles.roundedInput}
+          />
+        </div>
+
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>Email Address</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className={styles.roundedInput}
+          />
+        </div>
+
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>Date of Birth</label>
+          <input
+            type="date"
+            name="dob"
+            value={formData.dob}
+            onChange={handleChange}
+            className={styles.roundedInput}
+          />
+        </div>
+
+        {/* AGE DISPLAY (UPDATED TEXT) */}
+        <div className={styles.ageDisplay}>
+          You are {calculateAge(formData.dob)} years old
+        </div>
+
+        {/* STATS MINI-ROW */}
+        <div className={styles.statsRow}>
+          <div className={styles.miniStat}>
+            <span className={styles.statVal}>{stats.currency}</span>
+            <span className={styles.statLbl}>Coins</span>
+          </div>
+          <div className={styles.miniStat}>
+            <span className={styles.statVal}>{stats.bestStreak}🔥</span>
+            <span className={styles.statLbl}>Streak</span>
+          </div>
+        </div>
+
+        {/* SAVE BUTTON */}
+        <button className={styles.saveBtn} onClick={handleSave}>
+          Save Changes
+        </button>
+      </div>
+
     </div>
   );
 };

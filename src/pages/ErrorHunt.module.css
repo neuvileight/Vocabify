@@ -236,3 +236,49 @@
 @keyframes shake { 10%, 90% { transform: translateX(-2px); } 20%, 80% { transform: translateX(4px); } }
 @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+/* Add this to the bottom of src/pages/ErrorHunt.module.css */
+
+.dark {
+  /* Dark Orange/Green Theme */
+  background: linear-gradient(135deg, #1a0505 0%, #051a05 100%);
+  color: #E5E7EB;
+}
+
+.dark .gameBoard {
+  background: #111;
+  border-color: #333;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+}
+
+.dark .passageText {
+  color: #D1D5DB;
+}
+
+.dark .word:hover {
+  background-color: #331f0f;
+  color: #F97316;
+}
+
+.dark .header, 
+.dark .navRow, 
+.dark .message {
+  border-color: #333;
+}
+
+.dark .statItem, 
+.dark .inputSection, 
+.dark .backBtn, 
+.dark .navBtn {
+  background: #1a1a1a;
+  color: #D1D5DB;
+  border-color: #333;
+}
+
+.dark .modalContent {
+  background: #1a1a1a;
+  border-color: #333;
+}
+
+.dark .modalText {
+  color: #ccc;
+}

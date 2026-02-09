@@ -1,125 +1,279 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
 
-/* --- Global Container --- */
+/* --- GLOBAL CONTAINER --- */
 .container {
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f2f5; 
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  overflow: hidden;
-  position: relative; /* Essential for absolute positioning of children */
-}
-.dark { background-color: #0f0f0f; color: #eee; }
-
-/* --- BACK BUTTON (FIXED) --- */
-.backBtn {
-  position: absolute;
-  top: 40px;  /* Increased spacing from top */
-  left: 40px; /* Increased spacing from left */
-  background: white; /* Optional: Add background to make it pop */
-  padding: 10px 20px;
-  border-radius: 30px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  border: none;
-  font-size: 1rem; 
-  font-weight: 700; 
-  color: #555; 
-  cursor: pointer;
-  z-index: 100; /* Ensure it stays ON TOP of everything */
-  transition: transform 0.2s;
-}
-.backBtn:hover { transform: translateX(-5px); }
-.dark .backBtn { background: #333; color: white; }
-
-/* --- Profile Card --- */
-.profileCard {
-  background: white;
-  padding: 40px;
-  border-radius: 25px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-  width: 90%;
-  max-width: 900px;
-  display: flex;
-  gap: 40px;
-  align-items: flex-start;
-  animation: floatUp 0.5s ease-out forwards;
-  position: relative;
-  z-index: 10;
-}
-.dark .profileCard { background: #1e1e1e; }
-
-@keyframes floatUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- Left Column --- */
-.leftColumn {
+  background: linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%);
+  font-family: 'Nunito', sans-serif;
+  color: #0C4A6E;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-width: 180px;
-  padding-top: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  overflow-x: hidden;
+  transition: all 0.5s ease;
 }
-.mascot {
-  width: 140px; height: 140px;
+
+/* --- DARK MODE --- */
+.dark {
+  background: linear-gradient(135deg, #020617 0%, #0F172A 100%);
+  color: #E0F2FE;
+}
+
+/* --- NAVBAR --- */
+.navBar {
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  z-index: 10;
+}
+
+.backBtn {
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 800;
+  color: #0284C7;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.backBtn:hover { transform: translateX(-5px); }
+
+.themeToggle {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  width: 45px; height: 45px;
   border-radius: 50%;
-  border: 4px solid #8A2BE2;
-  padding: 5px;
-  margin-bottom: 15px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s;
 }
-.title { font-size: 2rem; font-weight: 800; color: #333; margin: 0; }
-.dark .title { color: white; }
 
-/* --- Right Column --- */
-.rightColumn {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.themeToggle:hover { transform: rotate(20deg) scale(1.1); background: rgba(255,255,255,0.3); }
+
+/* --- CENTERED CARD --- */
+.mainCard {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 50px;
+  border-radius: 40px;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 20px;
-  width: 100%;
+  z-index: 5;
+  border: 4px solid rgba(255,255,255,0.5);
+  transition: all 0.3s ease;
 }
-.formGroup { display: flex; flex-direction: column; }
-.fullWidth { grid-column: span 2; }
+
+.dark .mainCard {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: #38BDF8;
+  box-shadow: 0 0 40px rgba(56, 189, 248, 0.1);
+}
+
+/* --- AVATAR --- */
+.avatarCircle {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #38BDF8 0%, #0284C7 100%);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  color: white;
+  font-weight: 800;
+  box-shadow: 0 10px 20px rgba(2, 132, 199, 0.4);
+  border: 4px solid white;
+}
+
+/* --- FORM FIELDS --- */
+.inputGroup { width: 100%; text-align: left; }
+
 .label {
-  font-size: 0.8rem; font-weight: 700; color: #666;
-  margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;
+  display: block; font-size: 0.85rem; font-weight: 700;
+  margin-bottom: 8px; margin-left: 15px;
+  text-transform: uppercase; color: #64748B;
 }
-.dark .label { color: #aaa; }
+.dark .label { color: #94A3B8; }
 
-/* --- INPUTS --- */
-.input {
-  width: 100%;
-  padding: 12px 15px;
-  border-radius: 8px;
-  border: 2px solid #ccc; 
-  background-color: #f9f9f9; 
-  color: #333;
-  font-size: 1rem;
-  font-family: inherit;
-  box-sizing: border-box; 
+.roundedInput {
+  width: 100%; padding: 15px 25px; border-radius: 50px;
+  border: 2px solid #E2E8F0; background: #F8FAFC;
+  font-family: inherit; font-size: 1rem; font-weight: 600;
+  color: #334155; outline: none; transition: all 0.2s; box-sizing: border-box;
 }
-.dark .input { background-color: #2c2c2c; border-color: #444; color: white; }
-
-.input:focus {
-  border-color: #8A2BE2;
-  background-color: white;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.1);
+.roundedInput:focus {
+  border-color: #38BDF8; background: white;
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.2);
 }
+.dark .roundedInput { background: #0F172A; border-color: #334155; color: white; }
+.dark .roundedInput:focus { border-color: #38BDF8; }
 
-.ageText {
-  font-size: 0.85rem; color: #0072B1; font-weight: 600; margin-top: 5px;
+/* --- AGE DISPLAY --- */
+.ageDisplay {
+  background: #E0F2FE; color: #0284C7;
+  padding: 10px 20px; border-radius: 20px;
+  font-weight: 800; margin-top: -10px; margin-bottom: 10px;
+  font-size: 1rem; /* Slightly larger */
 }
+.dark .ageDisplay { background: #1e293b; color: #38BDF8; }
 
+/* --- SAVE BUTTON --- */
 .saveBtn {
-  grid-column: span 2; margin-top: 10px; padding: 14px;
-  border: none; border-radius: 10px;
-  background: #8A2BE2; color: white;
-  font-size: 1.1rem; font-weight: 700; cursor: pointer;
-  transition: background 0.2s;
+  background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+  color: white; border: none; padding: 15px 50px;
+  border-radius: 50px; font-size: 1.1rem; font-weight: 800;
+  cursor: pointer; margin-top: 10px; width: 100%;
+  box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); transition: transform 0.2s;
 }
-.saveBtn:hover { background: #7b1fa2; }
+.saveBtn:hover { transform: scale(1.03); box-shadow: 0 15px 25px rgba(16, 185, 129, 0.4); }
+
+/* --- STATS ROW --- */
+.statsRow {
+  display: flex; justify-content: space-around; width: 100%;
+  margin-top: 20px; padding-top: 20px; border-top: 2px solid #F1F5F9;
+}
+.dark .statsRow { border-color: #334155; }
+.miniStat { display: flex; flex-direction: column; align-items: center; }
+.statVal { font-size: 1.5rem; font-weight: 900; color: #0284C7; }
+.statLbl { font-size: 0.75rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; }
+.dark .statVal { color: #38BDF8; }
+
+/* =========================================
+   CSS STEALTH JET (Top Right)
+   ========================================= */
+.mascotContainer {
+  position: absolute;
+  top: 90px; /* Moved to Top */
+  right: 50px; /* Moved to Right */
+  width: 180px;
+  height: 100px;
+  animation: jetFloat 4s ease-in-out infinite;
+  z-index: 10;
+  pointer-events: none;
+  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.3));
+}
+
+.stealthJet {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-10deg); /* Slight bank */
+}
+
+/* Fuselage (Main Body) */
+.fuselage {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 140px;
+  height: 40px;
+  background: #1e293b; /* Slate 800 */
+  clip-path: polygon(0 40%, 100% 20%, 100% 80%, 0 60%);
+  z-index: 2;
+}
+
+/* Cockpit */
+.cockpit {
+  position: absolute;
+  top: 28px;
+  left: 10px;
+  width: 30px;
+  height: 15px;
+  background: #38bdf8; /* Cyan Glass */
+  clip-path: polygon(0 100%, 20% 0, 100% 100%);
+  z-index: 3;
+  opacity: 0.9;
+}
+
+/* Wings */
+.wingLeft {
+  position: absolute;
+  top: 40px;
+  left: 30px;
+  width: 80px;
+  height: 50px;
+  background: #334155; /* Slate 700 */
+  clip-path: polygon(0 0, 100% 0, 20% 100%);
+  transform: skewX(-30deg);
+  z-index: 3;
+}
+
+.wingRight {
+  position: absolute;
+  top: 10px;
+  left: 40px;
+  width: 80px;
+  height: 50px;
+  background: #0f172a; /* Slate 900 (Darker for depth) */
+  clip-path: polygon(0 100%, 100% 100%, 20% 0);
+  transform: skewX(-30deg);
+  z-index: 1;
+}
+
+/* Tail Stabilizers */
+.tail {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  width: 30px;
+  height: 35px;
+  background: #334155;
+  clip-path: polygon(20% 0, 0 100%, 100% 100%);
+  transform: skewX(20deg);
+  z-index: 1;
+}
+
+/* Engine Flame */
+.jetFlame {
+  position: absolute;
+  top: 38px;
+  right: -20px;
+  width: 40px;
+  height: 24px;
+  background: linear-gradient(90deg, #38bdf8, transparent);
+  clip-path: polygon(0 20%, 100% 50%, 0 80%);
+  opacity: 0.8;
+  animation: thrust 0.1s infinite alternate;
+  z-index: 0;
+}
+
+/* Animations */
+@keyframes jetFloat {
+  0%, 100% { transform: translateY(0) rotate(-10deg); }
+  50% { transform: translateY(-15px) rotate(-8deg); }
+}
+
+@keyframes thrust {
+  0% { transform: scaleX(1); opacity: 0.8; }
+  100% { transform: scaleX(1.2); opacity: 0.5; }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 800px) {
+  .mascotContainer {
+    width: 120px;
+    height: 70px;
+    top: 70px;
+    right: 20px;
+  }
+}
